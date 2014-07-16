@@ -1,0 +1,28 @@
+{
+  "name": "PepperTree",
+  "version": "0.1.0",
+  "authors": [
+    "harris sidiropoulos <harris.sidiropoulos@gmail.com>"
+  ],
+  "description": "Website for PepperTree",
+  "keywords": [
+    "responsive",
+    "bootstrap",
+    "carousel"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "modernizr": "~2.8.1",
+    "bootstrap-sass": "~3.0.2",
+    "jquery": "~2.1.1"
+  }
+}

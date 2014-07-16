@@ -1,0 +1,21 @@
+mixin modal(options)
+  -options = typeof options==="undefined" ? {} : options
+  -options.id = options.id || ""
+  -options.classes = options.classes || ""
+  -options.closeButtonLabel = options.classes || "Close"
+  -options.confirmButtonLabel = options.confirmButtonLabel || "Save"
+  -options.body = options.body || ""
+  -options.title = options.title || ""
+  .modal.fade(id=options.id, class=options.classes)
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type="button", data-dismiss="modal")
+            span(aria-hidden="true") &times;
+            span.sr-only=options.closeButtonLabel
+          h4.modal-title=options.title
+        .modal-body
+          p=options.body
+        .modal-footer
+          button(type="button", class="btn btn-default", data-dismiss="modal")=options.closeButtonLabel
+          button(type="button", class="btn btn-primary")=options.confirmButtonLabel

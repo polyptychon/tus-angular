@@ -1,0 +1,12 @@
+.DS_Store
+.idea
+*.idea
+.idea/workspace.xml
+*.idea/workspace.xml
+
+.sass-cache
+
+builds
+_builds
+node_modules
+bower_components
