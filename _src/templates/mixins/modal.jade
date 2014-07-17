@@ -23,7 +23,7 @@ mixin modal(options)
         .modal-footer
           .pull-left
             label
-              input(type="checkbox", ng-model="overwrite")
+              input(type="checkbox", ng-model="rememberOverwriteAnswer")
               |  Remember Answer
 
           button(type="button", class="btn btn-default", ng-click=options.cancelHandler)=options.closeButtonLabel

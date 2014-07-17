@@ -10,6 +10,7 @@ FileUploaderCTR = ($scope)  ->
   isObjectDragOver = false
 
   $scope.fileList = []
+  $scope.rememberOverwriteAnswer = false
   $scope.overwrite = false
   $scope.uploading = false
   $scope.currentFile = null
@@ -33,8 +34,11 @@ FileUploaderCTR = ($scope)  ->
       )
       .done((url, file) ->
         return $scope.stopFileUpload() unless $scope.uploading
-        if ($scope.overwrite || file.overwrite)
-          startUpload(file, options)
+        if ($scope.rememberOverwriteAnswer)
+          if ($scope.overwrite || $scope.currentFile.overwrite)
+            startUpload(file, options)
+          else
+            onUploadComplete()
         else
           $scope.showModal = true
           updateScope()
@@ -81,11 +85,9 @@ FileUploaderCTR = ($scope)  ->
     alert("Server unreachable #{status}") if (status==0)
 
   $scope.handleFileExists = (value)->
+    $scope.overwrite = value
     $scope.showModal = false
-    if (value)
-      startUpload($scope.currentFile, options)
-    else
-      $scope.stopFileUpload()
+    $scope.startFileUpload()
 
   $scope.haveFileAPI = ->
     tus.UploadSupport
@@ -201,7 +203,7 @@ FileUploaderCTR = ($scope)  ->
     return if (queueList.length == 0)
     $scope.currentFile = _.first(queueList)
     $scope.uploading = $scope.currentFile?
-    if ($scope.overwrite || $scope.currentFile.overwrite)
+    if ($scope.rememberOverwriteAnswer && ($scope.overwrite || $scope.currentFile.overwrite))
       startUpload($scope.currentFile, options)
     else
       startCheck($scope.currentFile, options)
