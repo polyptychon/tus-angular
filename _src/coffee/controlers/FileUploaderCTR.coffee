@@ -28,14 +28,21 @@ FileUploaderCTR = ($scope)  ->
         startUpload(file, options)
       )
       .done((url, file) ->
-        $scope.showModal = true
-        $scope.$apply()
+        return $scope.stopFileUpload() unless $scope.uploading
+        if ($scope.overwrite)
+          startUpload(file, options)
+        else
+          $scope.showModal = true
+          try
+            $scope.$apply()
+          catch e
+            console.log(e)
       )
 
   startUpload = (file, options) ->
     upload = tus.upload(file, options)
       .fail( (error, status) ->
-        onUploadStop()
+        $scope.stopFileUpload()
       )
       .progress((e, bytesUploaded, bytesTotal) ->
         try
@@ -48,10 +55,14 @@ FileUploaderCTR = ($scope)  ->
       )
 
   onUploadProgress = (bytesUploaded, bytesTotal) ->
+    return $scope.stopFileUpload() unless $scope.uploading
     progress = Math.floor((bytesUploaded / bytesTotal) * 100)
     $scope.currentFile.uploading = true
     $scope.currentFile.progressStyle = "width: " + progress + "%;"
-    $scope.$apply()
+    try
+      $scope.$apply()
+    catch e
+      console.log(e)
 
   onUploadComplete = ->
     $scope.currentFile.uploading = false
@@ -59,7 +70,10 @@ FileUploaderCTR = ($scope)  ->
     return $scope.stopFileUpload() unless $scope.uploading
     $scope.startFileUpload()
     $scope.uploading = queueList.length > 0
-    $scope.$apply()
+    try
+      $scope.$apply()
+    catch e
+      console.log(e)
 
   $scope.handleFileExists = (value)->
     $scope.showModal = false
@@ -123,8 +137,11 @@ FileUploaderCTR = ($scope)  ->
     return unless (file.type.match("image.*"))
     reader = new FileReader()
     reader.onload = (event) ->
-      file.imageDataAsStyle = "background-image:url(" + event.target.result + ")";
-      $scope.$apply();
+      file.imageDataAsStyle = "background-image:url(" + event.target.result + ")"
+      try
+        $scope.$apply()
+      catch e
+        console.log(e)
     reader.readAsDataURL(file)
 
   $scope.toggleSelection = (file) ->
@@ -166,10 +183,14 @@ FileUploaderCTR = ($scope)  ->
       $scope.startFileUpload()
 
   $scope.stopFileUpload = ->
-    $scope.uploading = $scope.currentFile.uploading = false
+    $scope.uploading = false
+    $scope.currentFile.uploading = false if $scope.currentFile?
     uploadCheck.stop() if uploadCheck?
     upload.stop() if upload?
-    $scope.apply()
+    try
+      $scope.apply() if $scope.apply?
+    catch e
+      console.log(e)
 
   $scope.startFileUpload = ->
     queueList = _.filter($scope.fileList, (file) ->
