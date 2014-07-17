@@ -2,11 +2,15 @@ mixin modal(options)
   -options = typeof options==="undefined" ? {} : options
   -options.id = options.id || ""
   -options.classes = options.classes || ""
-  -options.closeButtonLabel = options.classes || "Close"
-  -options.confirmButtonLabel = options.confirmButtonLabel || "Save"
+  -options.closeButtonLabel = options.classes || "No"
+  -options.confirmButtonLabel = options.confirmButtonLabel || "Yes"
   -options.body = options.body || ""
   -options.title = options.title || ""
-  .modal.fade(id=options.id, class=options.classes)
+  -options.hidden = options.hidden || "true"
+  -options.cancelHandler = options.cancelHandler || "handleFileExists(false)"
+  -options.applyHandler = options.applyHandler || "handleFileExists(true)"
+
+  .modal.fade(id=options.id, class=options.classes, showModal="showModal")
     .modal-dialog
       .modal-content
         .modal-header
@@ -17,5 +21,5 @@ mixin modal(options)
         .modal-body
           p=options.body
         .modal-footer
-          button(type="button", class="btn btn-default", data-dismiss="modal")=options.closeButtonLabel
-          button(type="button", class="btn btn-primary")=options.confirmButtonLabel
+          button(type="button", class="btn btn-default", ng-click=options.cancelHandler)=options.closeButtonLabel
+          button(type="button", class="btn btn-primary", ng-click=options.applyHandler)=options.confirmButtonLabel

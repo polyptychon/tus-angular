@@ -1,8 +1,25 @@
 'use strict';
 
-var angular = require("angular");
+var angular = require("angular"),
+  $ = require("jquery");
 
 angular.module('components', [])
+  .directive('showmodal', function ($http, $parse, $compile) {
+    return {
+      link: function (scope, element, attrs) {
+        scope.$watch(attrs.showmodal, function(value) {
+          myShowModal(value, element);
+        });
+        function myShowModal(value, element) {
+          if (value=="true" || value) {
+            $(element).modal("show");
+          } else {
+            $(element).modal("hide");
+          }
+        }
+      }
+    }
+  })
   .directive('sAutoHeight', function ($http, $parse, $compile) {
     return {
       restrict: 'A',

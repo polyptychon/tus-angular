@@ -10,8 +10,10 @@ FileUploaderCTR = ($scope)  ->
   isObjectDragOver = false
 
   $scope.fileList = []
+  $scope.overwrite = false
   $scope.uploading = false
   $scope.currentFile = null
+  $scope.showModal = false
   upload = null
   uploadCheck = null
   options =
@@ -22,13 +24,12 @@ FileUploaderCTR = ($scope)  ->
   startCheck = (file, options) ->
     uploadCheck = tus.check(file, options)
       .fail((error, status) ->
+        return $scope.stopFileUpload() unless $scope.uploading
         startUpload(file, options)
       )
       .done((url, file) ->
-        if (confirm("Do you want to overwrite file #{file.name}?"))
-          startUpload(file, options)
-        else
-          onUploadStop()
+        $scope.showModal = true
+        $scope.$apply()
       )
 
   startUpload = (file, options) ->
@@ -52,17 +53,20 @@ FileUploaderCTR = ($scope)  ->
     $scope.currentFile.progressStyle = "width: " + progress + "%;"
     $scope.$apply()
 
-
-  onUploadStop = ->
-    $scope.uploading = $scope.currentFile.uploading = false
-
   onUploadComplete = ->
     $scope.currentFile.uploading = false
     $scope.currentFile.uploaded = true
+    return $scope.stopFileUpload() unless $scope.uploading
     $scope.startFileUpload()
     $scope.uploading = queueList.length > 0
     $scope.$apply()
 
+  $scope.handleFileExists = (value)->
+    $scope.showModal = false
+    if (value)
+      startUpload($scope.currentFile, options)
+    else
+      $scope.stopFileUpload()
 
   $scope.haveFileAPI = ->
     tus.UploadSupport
@@ -162,9 +166,10 @@ FileUploaderCTR = ($scope)  ->
       $scope.startFileUpload()
 
   $scope.stopFileUpload = ->
-    $scope.currentFile.uploading = false
+    $scope.uploading = $scope.currentFile.uploading = false
     uploadCheck.stop() if uploadCheck?
     upload.stop() if upload?
+    $scope.apply()
 
   $scope.startFileUpload = ->
     queueList = _.filter($scope.fileList, (file) ->

@@ -15,7 +15,6 @@ html(ng-app="FileUploaderApp")
         input.btn.hidden(type="file", class="input-file", s-change="onFileInputSelection()", multiple)
         input.btn(type="button", value="Remove {{getSelectedFileListLength()}}Selected Files",
           ng-click="removeSelectedFiles()", ng-class="{disabled : isSelectedFileListEmpty(), 'disabled' : uploading}")
-        input.btn.primary.pull-right(type="button", value="Test Modal", data-toggle="modal", data-target="#confirmUploadModal")
         input.btn.primary.pull-right(type="button", value="{{getValueIf(uploading,'Upload','Stop')}}",
           ng-click="toggleUpload()", ng-class="{disabled : !isUploadEnabled()}")
     .container(ng-click="deselectAll()")
@@ -30,5 +29,5 @@ html(ng-app="FileUploaderApp")
                   .progress-bar(role="progressbar", aria-valuenow="60", aria-valuemin="0", aria-valuemax="100", style="{{file.progressStyle}}")
                 h5 {{file.name}}
           .loading.hidden
-    +modal({ id: "confirmUploadModal", title: "Test" })
+    +modal({ id: "confirmUploadModal", title: "File {{currentFile.name}}", body: "Do you want to overwrite file {{currentFile.name}}"})
     script(src="assets/js/app.js")
