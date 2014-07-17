@@ -21,5 +21,9 @@ mixin modal(options)
         .modal-body
           p=options.body
         .modal-footer
+          .pull-left
+            input(type="checkbox", ng-model="overwrite")
+            span  Remember Answer
+
           button(type="button", class="btn btn-default", ng-click=options.cancelHandler)=options.closeButtonLabel
           button(type="button", class="btn btn-primary", ng-click=options.applyHandler)=options.confirmButtonLabel

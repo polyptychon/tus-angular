@@ -18,7 +18,7 @@ FileUploaderCTR = ($scope)  ->
   uploadCheck = null
   options =
     endpoint: 'http://localhost:1080/files/'
-    resetBefore: $('#reset_before').prop('checked')
+    resetBefore: false
     resetAfter: true
 
   startCheck = (file, options) ->
@@ -29,7 +29,7 @@ FileUploaderCTR = ($scope)  ->
       )
       .done((url, file) ->
         return $scope.stopFileUpload() unless $scope.uploading
-        if ($scope.overwrite)
+        if ($scope.overwrite || file.overwrite)
           startUpload(file, options)
         else
           $scope.showModal = true
@@ -199,6 +199,9 @@ FileUploaderCTR = ($scope)  ->
     return if (queueList.length == 0)
     $scope.currentFile = _.first(queueList)
     $scope.uploading = $scope.currentFile?
-    startCheck($scope.currentFile, options)
+    if ($scope.overwrite || $scope.currentFile.overwrite)
+      startUpload($scope.currentFile, options)
+    else
+      startCheck($scope.currentFile, options)
 
 module.exports = FileUploaderCTR
