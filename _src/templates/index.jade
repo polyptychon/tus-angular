@@ -10,9 +10,9 @@ html(ng-app="FileUploaderApp")
   body(ng-controller="FileUploaderCTR")
     .container
       .panel
-        input#addFiles.btn(type="button", value="Add Files",
+        input#addFiles.btn(type="button", value="Add Files", triggerClickTo="#multiFilesSelection"
           ng-class="{disabled : !haveFileAPI(), 'disabled' : uploading}")
-        input.btn.hidden(type="file", class="input-file", s-change="onFileInputSelection()", multiple)
+        input#multiFilesSelection.btn.hidden(type="file", class="input-file", s-change="onFileInputSelection()", multiple)
         input.btn(type="button", value="Remove {{getSelectedFileListLength()}}Selected Files",
           ng-click="removeSelectedFiles()", ng-class="{disabled : isSelectedFileListEmpty(), 'disabled' : uploading}")
         input.btn.primary.pull-right(type="button", value="{{getValueIf(uploading,'Upload','Stop')}}",
@@ -29,5 +29,5 @@ html(ng-app="FileUploaderApp")
                   .progress-bar(role="progressbar", aria-valuenow="60", aria-valuemin="0", aria-valuemax="100", style="{{file.progressStyle}}")
                 h5 {{file.name}}
           .loading.hidden
-    +modal({ id: "confirmUploadModal", title: "File {{currentFile.name}}", body: "Do you want to overwrite file {{currentFile.name}}"})
+    +modal({ id: "confirmUploadModal", title: "File {{currentFile.name}}", body: "Do you want to overwrite file {{currentFile.name}}?"})
     script(src="assets/js/app.js")

@@ -4,6 +4,17 @@ var angular = require("angular"),
   $ = require("jquery");
 
 angular.module('components', [])
+  .directive('triggerclickto', function ($http, $parse, $compile) {
+    return {
+      restrict: 'A',
+
+      compile: function compileFn(element, attrs) {
+        $(element).bind("click", function() {
+          $(attrs.triggerclickto).trigger('click');
+        });
+      }
+    }
+  })
   .directive('showmodal', function ($http, $parse, $compile) {
     return {
       link: function (scope, element, attrs) {

@@ -25,7 +25,11 @@ FileUploaderCTR = ($scope)  ->
     uploadCheck = tus.check(file, options)
       .fail((error, status) ->
         return $scope.stopFileUpload() unless $scope.uploading
-        startUpload(file, options)
+        if (status==404)
+          startUpload(file, options)
+        else
+          abordOnError()
+          updateScope()
       )
       .done((url, file) ->
         return $scope.stopFileUpload() unless $scope.uploading
@@ -33,16 +37,13 @@ FileUploaderCTR = ($scope)  ->
           startUpload(file, options)
         else
           $scope.showModal = true
-          try
-            $scope.$apply()
-          catch e
-            console.log(e)
+          updateScope()
       )
 
   startUpload = (file, options) ->
     upload = tus.upload(file, options)
       .fail( (error, status) ->
-        $scope.stopFileUpload()
+        abordOnError()
       )
       .progress((e, bytesUploaded, bytesTotal) ->
         try
@@ -54,15 +55,18 @@ FileUploaderCTR = ($scope)  ->
         onUploadComplete()
       )
 
+  updateScope = ->
+    try
+      $scope.$apply()
+    catch e
+      console.log(e)
+
   onUploadProgress = (bytesUploaded, bytesTotal) ->
     return $scope.stopFileUpload() unless $scope.uploading
     progress = Math.floor((bytesUploaded / bytesTotal) * 100)
     $scope.currentFile.uploading = true
     $scope.currentFile.progressStyle = "width: " + progress + "%;"
-    try
-      $scope.$apply()
-    catch e
-      console.log(e)
+    updateScope()
 
   onUploadComplete = ->
     $scope.currentFile.uploading = false
@@ -70,10 +74,11 @@ FileUploaderCTR = ($scope)  ->
     return $scope.stopFileUpload() unless $scope.uploading
     $scope.startFileUpload()
     $scope.uploading = queueList.length > 0
-    try
-      $scope.$apply()
-    catch e
-      console.log(e)
+    updateScope()
+
+  abordOnError = (error, status) ->
+    $scope.stopFileUpload()
+    alert("Server unreachable #{status}") if (status==0)
 
   $scope.handleFileExists = (value)->
     $scope.showModal = false
@@ -138,10 +143,7 @@ FileUploaderCTR = ($scope)  ->
     reader = new FileReader()
     reader.onload = (event) ->
       file.imageDataAsStyle = "background-image:url(" + event.target.result + ")"
-      try
-        $scope.$apply()
-      catch e
-        console.log(e)
+      updateScope()
     reader.readAsDataURL(file)
 
   $scope.toggleSelection = (file) ->
