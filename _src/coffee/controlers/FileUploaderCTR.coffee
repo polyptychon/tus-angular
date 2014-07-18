@@ -33,6 +33,7 @@ FileUploaderCTR = ($scope)  ->
           updateScope()
       )
       .done((url, file) ->
+        console.log(file)
         return $scope.stopFileUpload() unless $scope.uploading
         if ($scope.rememberOverwriteAnswer)
           if ($scope.overwrite || $scope.currentFile.overwrite)
@@ -87,7 +88,10 @@ FileUploaderCTR = ($scope)  ->
   $scope.handleFileExists = (value)->
     $scope.overwrite = value
     $scope.showModal = false
-    $scope.startFileUpload()
+    if (value)
+      $scope.startFileUpload()
+    else
+      onUploadComplete()
 
   $scope.haveFileAPI = ->
     tus.UploadSupport
@@ -141,7 +145,8 @@ FileUploaderCTR = ($scope)  ->
     )
 
   loadImage = (file) ->
-    return unless (file.type.match("image.*"))
+    console.log(file.type)
+    return unless (file.type.match("image.(jpeg|png|gif)"))
     reader = new FileReader()
     reader.onload = (event) ->
       file.imageDataAsStyle = "background-image:url(" + event.target.result + ")"

@@ -23,8 +23,10 @@ angular.module('components', [])
         });
         function myShowModal(value, element) {
           if (value=="true" || value) {
+            $(".modal-backdrop").detach();
             $(element).modal("show");
           } else {
+            $(".modal-backdrop").detach();
             $(element).modal("hide");
           }
         }
