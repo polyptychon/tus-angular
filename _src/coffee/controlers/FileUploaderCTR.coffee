@@ -33,7 +33,6 @@ FileUploaderCTR = ($scope)  ->
           updateScope()
       )
       .done((url, file) ->
-        console.log(file)
         return $scope.stopFileUpload() unless $scope.uploading
         if ($scope.rememberOverwriteAnswer)
           if ($scope.overwrite || $scope.currentFile.overwrite)
@@ -89,7 +88,7 @@ FileUploaderCTR = ($scope)  ->
     $scope.overwrite = value
     $scope.showModal = false
     if (value)
-      $scope.startFileUpload()
+      startUpload($scope.currentFile, options)
     else
       onUploadComplete()
 
@@ -145,7 +144,6 @@ FileUploaderCTR = ($scope)  ->
     )
 
   loadImage = (file) ->
-    console.log(file.type)
     return unless (file.type.match("image.(jpeg|png|gif)"))
     reader = new FileReader()
     reader.onload = (event) ->
