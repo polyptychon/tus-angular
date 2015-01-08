@@ -7,6 +7,8 @@ var gulp = require('gulp'),
     csso = require('gulp-csso'),
     rename = require('gulp-rename'),
 
+    webserver = require('gulp-webserver'),
+
     runSequence = require('run-sequence'),
     livereload = require('gulp-livereload'),
     gulpif = require('gulp-if');
@@ -97,7 +99,16 @@ gulp.task('watch', function() {
     server.changed(file.path);
   });
 });
-
+gulp.task('connect', function() {
+  useServer = true;
+  gulp.src(BUILD+env)
+    .pipe(webserver({
+      //host: '0.0.0.0',
+      livereload: true,
+      directoryListing: true,
+      open: "index.html"
+    }));
+});
 gulp.task('default', ['fonts', 'coffee', 'jade', 'sass']);
 gulp.task('live', ['coffee', 'jade', 'sass', 'watch']);
 

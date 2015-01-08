@@ -38,6 +38,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-sass": "~0.7.1",
     "gulp-uglify": "~0.3.0",
+    "gulp-webserver": "^0.8.3",
     "run-sequence": "^0.3.6"
   },
   "dependencies": {
