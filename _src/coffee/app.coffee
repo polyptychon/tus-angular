@@ -1,5 +1,5 @@
 $ = require "jquery"
-angular = require "angular"
+require "angular/angular"
 FileUploaderCTR = require "./controlers/FileUploaderCTR.coffee"
 require "./directives/components"
 require "bootstrapify"

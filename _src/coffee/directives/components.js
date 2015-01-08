@@ -1,7 +1,7 @@
 'use strict';
 
-var angular = require("angular"),
-  $ = require("jquery");
+var $ = require("jquery");
+require("angular/angular");
 
 angular.module('components', [])
   .directive('triggerclickto', function ($http, $parse, $compile) {
